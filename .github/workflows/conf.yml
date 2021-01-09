@@ -1,4 +1,4 @@
-name: QQ刷赞
+name: QQ群每日一句
 on:
   push:
     branches: [main]
@@ -6,7 +6,7 @@ on:
     branches: [main]
   schedule:
     # - cron: 0 22,14 * * * 北京时间每天8点自动执行
-    - cron: 30 7 * * *
+    - cron: 0 0 * * *
   watch:
     types: started
 
