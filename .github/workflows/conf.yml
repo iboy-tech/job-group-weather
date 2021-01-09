@@ -1,0 +1,30 @@
+name: QQ刷赞
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # - cron: 0 22,14 * * * 北京时间每天8点自动执行
+    - cron: 30 7 * * *
+  watch:
+    types: started
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+
+    steps:
+      - uses: actions/checkout@master
+      - name: 初始化Python环境
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: 安装依赖并替换环境变量
+        env:
+          API: ${{ secrets.API }}
+          SPKEY: ${{ secrets.SPKEY }}
+        run: |
+          pip install -r requirements.txt
+          python3 main.py
