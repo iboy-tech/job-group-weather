@@ -61,7 +61,7 @@ def get_iciba_everyday():
     english = eed.json()['content']
     zh_CN = eed.json()['note']
     str1 = '【每日一句】\n' + english + '\n' + zh_CN
-    return str1+"[CQ:image,file={}]".format(eed.json()['fenxiang_img'])
+    return str1+"[CQ:image,file={}]".format(eed.json()['fenxiang_img']), english+zh_CN
 
 # 主函数
 
@@ -69,12 +69,17 @@ def get_iciba_everyday():
 def main(*args):
     ciba = get_iciba_everyday()
     for key in keys:
-        msg = {
+        msg1 = {
             "group_id": key,
-            "message": ciba
+            "message": ciba[0]
         }
         # 把天气数据转换成UTF-8格式，不然要报错。
-        requests.post(api, msg)
+        msg2 = {
+            "group_id": key,
+            "message": "[CQ:tts,text={}]".format(ciba[1])
+        }
+        requests.post(api, msg1)
+        requests.post(api, msg2)
     get_163_info()
 
 
