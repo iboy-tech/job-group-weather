@@ -1,7 +1,7 @@
 # -*- coding:UTF-8 -*-
 # !/usr/bin/python
 """
-@File    : 163.py.py
+@File    : main.py
 @Time    : 2020/10/4 19:321
 @Author  : iBoy
 @Email   : iboy@iboy.tech
@@ -13,7 +13,7 @@ import requests
 import requests.packages.urllib3.util.ssl_
 requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS = 'ALL'
 
-spkeys = os.environ['SPKEY'].split('#')
+keys = os.environ['KEY'].split("#")
 
 api = os.environ['API']
 
@@ -43,13 +43,12 @@ def get_163_info():
         id = data["url"].replace(
             "http://music.163.com/song/media/outer/url?id=", "")
         data['music'] = "[CQ:music,type=163,id={}]".format(id)
-        for spkey in spkeys:
+        for key in keys:
             msg = {
-                "user_id": spkey,
+                "group_id": key,
                 "message": data['music'].encode('utf-8')
             }
             requests.post(api, msg)
-        return data
     except Exception as e:
         print(str(e))
         return get_163_info()
@@ -61,15 +60,18 @@ def get_iciba_everyday():
     eed = requests.get(icbapi)
     english = eed.json()['content']
     zh_CN = eed.json()['note']
-    str = '\n【奇怪的知识】\n' + english + '\n' + zh_CN
-    return str.encode('utf-8')
+    str1 = '【每日一句】\n' + english + '\n' + zh_CN
+    return str1+"[CQ:image,file={}]".format(eed.json()['fenxiang_img'])
 
 # 主函数
+
+
 def main(*args):
-    for spkey in spkeys:
+    ciba = get_iciba_everyday()
+    for key in keys:
         msg = {
-            "user_id": spkey.encode('utf-8'),
-            "message": get_iciba_everyday().rstrip().encode('utf-8')
+            "group_id": key,
+            "message": ciba
         }
         # 把天气数据转换成UTF-8格式，不然要报错。
         requests.post(api, msg)

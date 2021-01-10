@@ -24,7 +24,7 @@ jobs:
       - name: 安装依赖并替换环境变量
         env:
           API: ${{ secrets.API }}
-          SPKEY: ${{ secrets.SPKEY }}
+          KEY: ${{ secrets.KEY }}
         run: |
           pip install -r requirements.txt
           python3 main.py
